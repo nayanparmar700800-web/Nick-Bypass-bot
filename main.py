@@ -19,19 +19,25 @@ def run():
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# સાચું લિંક બાયપાસ કરવાનું ફંક્શન (Using Multi-Bypass API)
+# સાચું લિંક બાયપાસ કરવાનું ફંક્શન
 def bypass_link(url):
     try:
-        # ફ્રી બાયપાસ API લિંક
+        # બધી શોર્ટનર લિંક્સને સપોર્ટ કરતી પાવરફુલ ફ્રી API
         api_url = f"https://api.bypass.vip/bypass?url={url}"
-        response = requests.get(api_url, timeout=10)
+        response = requests.get(api_url, timeout=15)
         data = response.json()
         
         # જો API સફળતાપૂર્વક લિંક બાયપાસ કરે તો સાચી લિંક મોકલો
-        if data.get("status") == "success":
+        if data.get("status") == "success" and data.get("bypassed_url"):
             return data.get("bypassed_url")
         else:
-            return "❌ આ લિંક સપોર્ટેડ નથી અથવા બાયપાસ ન થઈ શકી."
+            # જો કોઈ કારણસર સર્વર ૧ કામ ન કરે તો બેકઅપ તરીકે ડાયરેક્ટ રિસ્પોન્સ ચેક કરવો
+            # આ લોજિક earnlinks અને linksgo જેવી સાઇટ્સ માટે બેકઅપ આપશે
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+            res = requests.get(url, headers=headers, allow_redirects=True, timeout=10)
+            if res.url != url:
+                return res.url
+            return "❌ આ લિંક સપોર્ટેડ નથી અથવા હમણાં બાયપાસ થઈ શકે તેમ નથી."
     except Exception as e:
         return f"❌ સર્વર એરર: {str(e)}"
 
@@ -41,7 +47,7 @@ def send_welcome(message):
     welcome_text = (
         "❤️😊 *Nick Bypass Bot* 😊❤️\n\n"
         "👋 *Hello!* Welcome to the Link Bypasser Bot.\n\n"
-        "🔗 Send me any shortener link, "
+        "🔗 Send me any shortener link (like earnlinks, linksgo, followyou),\n"
         "and I will bypass it for you instantly!"
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode='Markdown')
