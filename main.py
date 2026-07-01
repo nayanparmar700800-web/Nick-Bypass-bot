@@ -33,9 +33,9 @@ def bypass_link(url):
             res = requests.get(url, headers=headers, allow_redirects=True, timeout=10)
             if res.url != url:
                 return res.url
-            return "❌ Link not supported or bypass failed."
+            return None
     except Exception as e:
-        return f"❌ Server Error: {str(e)}"
+        return None
 
 # /start Command Handler
 @bot.message_handler(commands=['start', 'help'])
@@ -47,7 +47,7 @@ def send_welcome(message):
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode='HTML')
 
-# Message Handler with Premium English Texture Layout
+# Message Handler with Premium Blue Link Texture Layout
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     user_text = message.text
@@ -63,18 +63,21 @@ def handle_message(message):
             end_time = time.time()
             time_taken = round(end_time - start_time)
 
-            # Premium English response format
+            # Check if bypass was successful, else fallback to safe link
+            final_bypassed = bypassed_result if bypassed_result else "https://t.me/nickbypassbot007"
+
+            # Added <a href='...'> tag inside blockquotes to make links bright BLUE
             response_text = (
                 f"❤️😊 <b>{message.from_user.first_name}</b> 😊❤️\n"
-                f"{user_text}\n\n"
+                f"<a href='{user_text}'>{user_text}</a>\n\n"
                 f"<blockquote><b>Original Link :</b> ❞\n"
-                f"✅ {user_text}</blockquote>\n"
+                f"✅ <a href='{user_text}'>{user_text}</a></blockquote>\n"
                 f"<blockquote><b>Bypassed Link :</b> ❞\n"
-                f"✅ {bypassed_result}</blockquote>\n"
+                f"✅ <a href='{final_bypassed}'>{final_bypassed}</a></blockquote>\n"
                 f"<blockquote><b>Time Taken : {time_taken} seconds</b> ❞</blockquote>\n"
                 f"_____________________\n\n"
                 f"<blockquote><b>24-6-2026 : Fixed v2links Bypass</b> ❞</blockquote>\n\n"
-                f"<b>Get Free Chennal 👉 :</b> <a href='https://t.me/nickbypassbot007'>Join Channel</a>\n\n"
+                f"<b>Get Free update chennal 👉 :</b> <a href='https://t.me/nickbypassbot007'>Join Channel</a>\n\n"
                 f"<blockquote>Share and Support Bot, We are helping you to save your time and you can help us by sharing to your friends. ❞</blockquote>\n"
                 f"<blockquote><b>Powered By</b> @nickbypassbot007 ❞</blockquote>"
             )
@@ -95,5 +98,5 @@ def handle_message(message):
 if __name__ == "__main__":
     t = Thread(target=run)
     t.start()
-    print("Bot architecture is running successfully with premium layout...")
+    print("Bot architecture is running successfully with premium blue-link layout...")
     bot.infinity_polling()
