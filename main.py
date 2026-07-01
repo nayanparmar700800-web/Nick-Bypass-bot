@@ -10,7 +10,7 @@ app = Flask('')
 
 @app.route('/')
 def home():
-    return "Bot is 100% Active!"
+    return "Universal Bypasser Bot is 100% Active!"
 
 def run():
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
@@ -19,7 +19,7 @@ def run():
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# Super Multi-Server Bypasser Function
+# Powerful Multi-Server Bypasser Function
 def bypass_link(url):
     # Server 1: Premium Universal Bypass API
     try:
@@ -41,30 +41,28 @@ def bypass_link(url):
     except:
         pass
 
-    # Server 3: Advanced Redirect Scraper
+    # Server 3: Direct Unshortener Backup
     try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
-        res = requests.get(url, headers=headers, allow_redirects=True, timeout=12)
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        res = requests.get(url, headers=headers, allow_redirects=True, timeout=10)
         if res.url and res.url != url:
             return res.url
     except:
         pass
 
-    return url  # જો બાયપાસ ન થાય, તો ઓરિજિનલ લિંક જ પાછી આપો
+    return url
 
 # /start Command Handler
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     welcome_text = (
-        "❤️😊 <b>Universal Link Bypass Bot</b> 😊❤️\n\n"
-        "👋 <b>Hello!</b> Welcome to the Ultimate Link Bypasser Bot.\n\n"
-        "🔗 Send me any shortener link, and I will bypass it instantly!"
+        "❤️😊 <b>Nick Bypass Bot</b> 😊❤️\n\n"
+        "👋 <b>Hello!</b> Welcome to the Link Bypasser Bot.\n\n"
+        "🔗 Send me any shortener link and I will bypass it instantly!"
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode='HTML')
 
-# Message Handler (કોઈપણ ચેનલ લિંક વગરનું કલરફૂલ ટેક્સ્ચર)
+# Message Handler (તમારી નવી અપડેટ ચેનલ સાથેનો ફાઇનલ લેઆઉટ)
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     user_text = message.text
@@ -73,28 +71,22 @@ def handle_message(message):
         start_time = time.time()
         
         # Processing message
-        status_msg = bot.send_message(message.chat.id, "⏳ <b>Bypassing your link, please wait...</b>", parse_mode='HTML')
+        status_msg = bot.send_message(message.chat.id, "⏳ <b>Processing...</b>", parse_mode='HTML')
         
         try:
             bypassed_result = bypass_link(user_text)
             end_time = time.time()
             time_taken = round(end_time - start_time)
 
-            # જો બાયપાસ સર્વર ફેલ જાય તો યુઝરની લિંક જ ફાઇનલ ગણાશે
-            final_bypassed = bypassed_result if bypassed_result else user_text
-
-            # પ્રીમિયમ લેઆઉટ - ચેનલ પ્રમોશન લિંક્સ સંપૂર્ણપણે હટાવી દીધી છે
+            # ૧૦૦% પરફેક્ટ રિસ્પોન્સ ફોર્મેટ - કસ્ટમ અપડેટ ચેનલ લિંક સાથે
             response_text = (
-                f"❤️😊 <b>{message.from_user.first_name}</b> 😊❤️\n"
-                f"<a href='{user_text}'>{user_text}</a>\n\n"
-                f"<blockquote><b>Original Link :</b> ❞\n"
-                f"✅ <a href='{user_text}'>{user_text}</a></blockquote>\n"
-                f"<blockquote><b>Bypassed Link :</b> ❞\n"
-                f"✅ <a href='{final_bypassed}'>{final_bypassed}</a></blockquote>\n"
-                f"<blockquote><b>Time Taken : {time_taken} seconds</b> ❞</blockquote>\n"
-                f"_____________________\n\n"
-                f"<blockquote><b>Universal Multi-Server Active</b> ❞</blockquote>\n\n"
-                f"<blockquote>Share and Support Bot, We are helping you to save your time and you can help us by sharing to your friends. ❞</blockquote>"
+                f"❤️😊 <b>NAYAN</b> 😊❤️\n"
+                f"{user_text}\n"
+                f"<a href='{bypassed_result}'>{bypassed_result}</a>\n\n"
+                f"<blockquote><b>24-6-2026 : Fixed v2links Bypass</b> ❞</blockquote>\n\n"
+                f"<b>Get Free update chennal :</b> <a href='https://t.me/nickbypassbot007'>Join Channel</a>\n\n"
+                f"<blockquote>Share and Support Bot, We are helping you to save your time and you can help us by sharing to your friends. ❞</blockquote>\n"
+                f"<blockquote><b>Powered By</b> @Nick_Bypass_Bot ❞</blockquote>"
             )
             
             bot.edit_message_text(
@@ -106,12 +98,12 @@ def handle_message(message):
             )
             
         except Exception as e:
-            bot.edit_message_text(f"❌ <b>Error occurred:</b> {str(e)}", message.chat.id, status_msg.message_id, parse_mode='HTML')
+            bot.edit_message_text(f"❌ Error: {str(e)}", message.chat.id, status_msg.message_id)
     else:
         bot.send_message(message.chat.id, "❌ Please send a valid link (URL).")
 
 if __name__ == "__main__":
     t = Thread(target=run)
     t.start()
-    print("Clean Bypasser Bot is running successfully...")
+    print("Bot is running with updated update channel layout...")
     bot.infinity_polling()
