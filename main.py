@@ -19,14 +19,14 @@ def run():
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# લિંક બાયપાસ કરવાનું ફંક્શન (તમારા અસલી API સાથે આને બદલી શકો છો)
+# લિંક બાયપાસ કરવાનું ફંક્શન
 def bypass_link(url):
     time.sleep(1) # ડેમો પ્રોસેસિંગ ટાઈમ માટે ૧ સેકન્ડનો હોલ્ડ
     if "earnlinks.in" in url:
         return "https://linksgo.in/9bRS9r"
     return "https://bypassed-link.com/result"
 
-# /start કમાન્ડ હેન્ડલર (In English)
+# /start કમાન્ડ હેન્ડલર
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     welcome_text = (
@@ -37,13 +37,12 @@ def send_welcome(message):
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode='Markdown')
 
-# લિંક મેસેજ હેન્ડલર (In English - exact same structure as screenshot)
+# લિંક મેસેજ હેન્ડલર (તમારી સાચી ચેનલ લિંક સાથે)
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     user_text = message.text
 
     if "http://" in user_text or "https://" in user_text:
-        # સમય ગણવાનું શરૂ કરો
         start_time = time.time()
         
         # વેટિંગ મેસેજ
@@ -53,11 +52,10 @@ def handle_message(message):
             # બાયપાસ ફંક્શન કોલ
             bypassed_result = bypass_link(user_text)
             
-            # સમયની ગણતરી
             end_time = time.time()
             time_taken = round(end_time - start_time)
 
-            # સ્ક્રીનશોટ મુજબનું પ્રોફેસનલ ઇંગ્લિશ ફોર્મેટ
+            # ફોર્મેટમાં તમારી લિંક સેટ કરી દીધી છે
             response_text = (
                 f"❤️😊 *{message.from_user.first_name}* 😊❤️\n"
                 f"`{user_text}`\n\n"
@@ -67,12 +65,11 @@ def handle_message(message):
                 f"✅ {bypassed_result}\n\n"
                 f"⏱️ *Time Taken :* {time_taken} seconds ❞\n"
                 f"━━━━━━━━━━━━━━━━━━\n\n"
-                f"📢 *Get Free Updates :* [Join Channel](https://t.me/your_channel_username)\n\n"
+                f"📢 *Get Free Updates :* [Join Channel](https://t.me/nickbypass_bot_2007)\n\n"
                 f"💡 *Share and Support Bot:* We are helping you to save your time and you can help us by sharing to your friends.\n\n"
                 f"⚡ *Powered By :* @Nick_Bypass_Bot"
             )
             
-            # મેસેજ એડિટ કરીને ફાઇનલ રીઝલ્ટ મોકલો
             bot.edit_message_text(response_text, message.chat.id, status_msg.message_id, parse_mode='Markdown', disable_web_page_preview=True)
             
         except Exception as e:
