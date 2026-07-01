@@ -22,37 +22,32 @@ bot = telebot.TeleBot(BOT_TOKEN)
 # સાચું લિંક બાયપાસ કરવાનું ફંક્શન
 def bypass_link(url):
     try:
-        # બધી શોર્ટનર લિંક્સને સપોર્ટ કરતી પાવરફુલ ફ્રી API
         api_url = f"https://api.bypass.vip/bypass?url={url}"
         response = requests.get(api_url, timeout=15)
         data = response.json()
         
-        # જો API સફળતાપૂર્વક લિંક બાયપાસ કરે તો સાચી લિંક મોકલો
         if data.get("status") == "success" and data.get("bypassed_url"):
             return data.get("bypassed_url")
         else:
-            # જો કોઈ કારણસર સર્વર ૧ કામ ન કરે તો બેકઅપ તરીકે ડાયરેક્ટ રિસ્પોન્સ ચેક કરવો
-            # આ લોજિક earnlinks અને linksgo જેવી સાઇટ્સ માટે બેકઅપ આપશે
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+            headers = {'User-Agent': 'Mozilla/5.0'}
             res = requests.get(url, headers=headers, allow_redirects=True, timeout=10)
             if res.url != url:
                 return res.url
-            return "❌ આ લિંક સપોર્ટેડ નથી અથવા હમણાં બાયપાસ થઈ શકે તેમ નથી."
+            return "❌ Link not supported or bypass failed."
     except Exception as e:
-        return f"❌ સર્વર એરર: {str(e)}"
+        return f"❌ Server Error: {str(e)}"
 
 # /start કમાન્ડ હેન્ડલર
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     welcome_text = (
-        "❤️😊 *Nick Bypass Bot* 😊❤️\n\n"
-        "👋 *Hello!* Welcome to the Link Bypasser Bot.\n\n"
-        "🔗 Send me any shortener link (like earnlinks, linksgo, followyou),\n"
-        "and I will bypass it for you instantly!"
+        "❤️😊 <b>Nick Bypass Bot</b> 😊❤️\n\n"
+        "👋 <b>Hello!</b> Welcome to the Link Bypasser Bot.\n\n"
+        "🔗 Send me any shortener link and I will bypass it instantly!"
     )
-    bot.send_message(message.chat.id, welcome_text, parse_mode='Markdown')
+    bot.send_message(message.chat.id, welcome_text, parse_mode='HTML')
 
-# લિંક મેસેજ હેન્ડલર
+# લિંક મેસેજ હેન્ડલર - HTML ક્વોટ બ્લોક્સ (કલરફૂલ ડિઝાઇન) સાથે
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     user_text = message.text
@@ -61,39 +56,44 @@ def handle_message(message):
         start_time = time.time()
         
         # વેટિંગ મેસેજ
-        status_msg = bot.send_message(message.chat.id, "⏳ *Processing your link, please wait...*", parse_mode='Markdown')
+        status_msg = bot.send_message(message.chat.id, "⏳ <b>Processing your link, please wait...</b>", parse_mode='HTML')
         
         try:
-            # બાયપાસ ફંક્શન કોલ
             bypassed_result = bypass_link(user_text)
-            
             end_time = time.time()
             time_taken = round(end_time - start_time)
 
+            # HTML માં <blockquote> વાપરવાથી સ્ક્રીનશોટ જેવો કલરફૂલ લુક આવશે
             response_text = (
-                f"❤️😊 *{message.from_user.first_name}* 😊❤️\n"
-                f"`{user_text}`\n\n"
-                f"📝 *Original Link :* ❞\n"
-                f"✅ {user_text}\n\n"
-                f"🔓 *Bypassed Link :* ❞\n"
-                f"✅ {bypassed_result}\n\n"
-                f"⏱️ *Time Taken :* {time_taken} seconds ❞\n"
-                f"━━━━━━━━━━━━━━━━━━\n\n"
-                f"📢 *Get Free Updates :* [Join Channel](https://t.me/nickbypass_bot_2007)\n\n"
-                f"💡 *Share and Support Bot:* We are helping you to save your time and you can help us by sharing to your friends.\n\n"
-                f"⚡ *Powered By :* @Nick_Bypass_Bot"
+                f"❤️😊 <b>{message.from_user.first_name}</b> 😊❤️\n"
+                f"{user_text}\n\n"
+                f"<blockquote><b>Original Link :</b> ❞\n"
+                f"✅ {user_text}</blockquote>\n"
+                f"<blockquote><b>Bypassed Link :</b> ❞\n"
+                f"✅ {bypassed_result}</blockquote>\n"
+                f"<blockquote><b>Time Taken : {time_taken} seconds</b> ❞</blockquote>\n"
+                f"_____________________\n\n"
+                f"<blockquote><b>24-6-2026 : Fixed v2links Bypass</b> ❞</blockquote>\n\n"
+                f"<b>Get Free Fire Mods :</b> <a href='https://t.me/nickbypass_bot_2007'>Join Channel</a>\n\n"
+                f"<blockquote>Share and Support Bot, We are helping you to save your time and you can help us by sharing to your friends. ❞</blockquote>\n"
+                f"<blockquote><b>Powered By</b> @Nick_Bypass_Bot ❞</blockquote>"
             )
             
-            bot.edit_message_text(response_text, message.chat.id, status_msg.message_id, parse_mode='Markdown', disable_web_page_preview=True)
+            bot.edit_message_text(
+                chat_id=message.chat.id,
+                message_id=status_msg.message_id,
+                text=response_text,
+                parse_mode='HTML',
+                disable_web_page_preview=True
+            )
             
         except Exception as e:
-            bot.edit_message_text(f"❌ *Error occurred:* {str(e)}", message.chat.id, status_msg.message_id, parse_mode='Markdown')
+            bot.edit_message_text(f"❌ <b>Error occurred:</b> {str(e)}", message.chat.id, status_msg.message_id, parse_mode='HTML')
     else:
         bot.send_message(message.chat.id, "❌ Please send a valid link (URL).")
 
-# બોટ અને સર્વર રન કરવા માટે
 if __name__ == "__main__":
     t = Thread(target=run)
     t.start()
-    print("Bot architecture is running successfully...")
+    print("Bot architecture is running successfully with premium layout...")
     bot.infinity_polling()
