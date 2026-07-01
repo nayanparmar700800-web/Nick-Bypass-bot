@@ -5,7 +5,7 @@ import requests
 from flask import Flask
 from threading import Thread
 
-# Render પોર્ટ ફિક્સ કરવા માટે Flask વેબ સર્વર
+# Flask web server to fix Render port binding
 app = Flask('')
 
 @app.route('/')
@@ -15,11 +15,11 @@ def home():
 def run():
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
 
-# ટેલિગ્રામ બોટ સેટઅપ
+# Telegram Bot Setup
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# સાચું લિંક બાયપાસ કરવાનું ફંક્શન
+# Link Bypasser Function
 def bypass_link(url):
     try:
         api_url = f"https://api.bypass.vip/bypass?url={url}"
@@ -37,7 +37,7 @@ def bypass_link(url):
     except Exception as e:
         return f"❌ Server Error: {str(e)}"
 
-# /start કમાન્ડ હેન્ડલર
+# /start Command Handler
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     welcome_text = (
@@ -47,7 +47,7 @@ def send_welcome(message):
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode='HTML')
 
-# લિંક મેસેજ હેન્ડલર - HTML ક્વોટ બ્લોક્સ (કલરફૂલ ડિઝાઇન) સાથે
+# Message Handler with Premium English Texture Layout
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     user_text = message.text
@@ -55,7 +55,7 @@ def handle_message(message):
     if "http://" in user_text or "https://" in user_text:
         start_time = time.time()
         
-        # વેટિંગ મેસેજ
+        # Processing message
         status_msg = bot.send_message(message.chat.id, "⏳ <b>Processing your link, please wait...</b>", parse_mode='HTML')
         
         try:
@@ -63,7 +63,7 @@ def handle_message(message):
             end_time = time.time()
             time_taken = round(end_time - start_time)
 
-            # HTML માં <blockquote> વાપરવાથી સ્ક્રીનશોટ જેવો કલરફૂલ લુક આવશે
+            # Premium English response format
             response_text = (
                 f"❤️😊 <b>{message.from_user.first_name}</b> 😊❤️\n"
                 f"{user_text}\n\n"
@@ -74,9 +74,9 @@ def handle_message(message):
                 f"<blockquote><b>Time Taken : {time_taken} seconds</b> ❞</blockquote>\n"
                 f"_____________________\n\n"
                 f"<blockquote><b>24-6-2026 : Fixed v2links Bypass</b> ❞</blockquote>\n\n"
-                f"<b>Get Free Fire Mods :</b> <a href='https://t.me/nickbypass_bot_2007'>Join Channel</a>\n\n"
+                f"<b>Get Free Chennal 👉 :</b> <a href='https://t.me/nickbypassbot007'>Join Channel</a>\n\n"
                 f"<blockquote>Share and Support Bot, We are helping you to save your time and you can help us by sharing to your friends. ❞</blockquote>\n"
-                f"<blockquote><b>Powered By</b> @Nick_Bypass_Bot ❞</blockquote>"
+                f"<blockquote><b>Powered By</b> @nickbypassbot007 ❞</blockquote>"
             )
             
             bot.edit_message_text(
