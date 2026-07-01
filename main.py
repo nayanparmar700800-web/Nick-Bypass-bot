@@ -4,6 +4,7 @@ import telebot
 import requests
 from flask import Flask
 from threading import Thread
+from telebot.types import BotCommand  # મેનૂ કમાન્ડ માટે ઇમ્પોર્ટ કર્યું
 
 # Flask web server to fix Render port binding
 app = Flask('')
@@ -18,6 +19,24 @@ def run():
 # Telegram Bot Setup
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot(BOT_TOKEN)
+
+# --- 1000002652.jpg મુજબનું મેનૂ સેટિંગ અહીં ઉમેર્યું છે ---
+commands = [
+    BotCommand("start", "Check Bot Alive Or Dead ."),
+    BotCommand("aha", "Scrape Poster From Aha ."),
+    BotCommand("airtelxstream", "Scrape Poster From Airtelxstream ."),
+    BotCommand("amazon", "Scrape Poster From Amazon ."),
+    BotCommand("appletv", "Scrape Poster From Appletv ."),
+    BotCommand("bookmyshow", "Scrape Poster From Bookmyshow ."),
+    BotCommand("chaupal", "Scrape Poster From Chaupal ."),
+    BotCommand("crunchyroll", "Scrape Poster From Crunchyroll ."),
+    BotCommand("iqcom", "Scrape Poster From Iqcom ."),
+    BotCommand("plex", "Scrape Poster From Plex ."),
+    BotCommand("viki", "Scrape Poster From Viki ."),
+    BotCommand("wetv", "Scrape Poster From Wetv .")
+]
+bot.set_my_commands(commands)
+# -----------------------------------------------------
 
 # Powerful Multi-Server Bypasser Function
 def bypass_link(url):
@@ -110,5 +129,5 @@ def handle_message(message):
 if __name__ == "__main__":
     t = Thread(target=run)
     t.start()
-    print("Bot is running with updated footer channel link...")
+    print("Bot is running with updated footer channel link and command menu...")
     bot.infinity_polling()
