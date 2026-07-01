@@ -19,12 +19,21 @@ def run():
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# લિંક બાયપાસ કરવાનું ફંક્શન
+# સાચું લિંક બાયપાસ કરવાનું ફંક્શન (Using Multi-Bypass API)
 def bypass_link(url):
-    time.sleep(1) # ડેમો પ્રોસેસિંગ ટાઈમ માટે ૧ સેકન્ડનો હોલ્ડ
-    if "earnlinks.in" in url:
-        return "https://linksgo.in/9bRS9r"
-    return "https://bypassed-link.com/result"
+    try:
+        # ફ્રી બાયપાસ API લિંક
+        api_url = f"https://api.bypass.vip/bypass?url={url}"
+        response = requests.get(api_url, timeout=10)
+        data = response.json()
+        
+        # જો API સફળતાપૂર્વક લિંક બાયપાસ કરે તો સાચી લિંક મોકલો
+        if data.get("status") == "success":
+            return data.get("bypassed_url")
+        else:
+            return "❌ આ લિંક સપોર્ટેડ નથી અથવા બાયપાસ ન થઈ શકી."
+    except Exception as e:
+        return f"❌ સર્વર એરર: {str(e)}"
 
 # /start કમાન્ડ હેન્ડલર
 @bot.message_handler(commands=['start', 'help'])
@@ -32,12 +41,12 @@ def send_welcome(message):
     welcome_text = (
         "❤️😊 *Nick Bypass Bot* 😊❤️\n\n"
         "👋 *Hello!* Welcome to the Link Bypasser Bot.\n\n"
-        "🔗 Send me any shortener link (like `earnlinks.in`), "
+        "🔗 Send me any shortener link, "
         "and I will bypass it for you instantly!"
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode='Markdown')
 
-# લિંક મેસેજ હેન્ડલર (તમારી સાચી ચેનલ લિંક સાથે)
+# લિંક મેસેજ હેન્ડલર
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     user_text = message.text
@@ -55,7 +64,6 @@ def handle_message(message):
             end_time = time.time()
             time_taken = round(end_time - start_time)
 
-            # ફોર્મેટમાં તમારી લિંક સેટ કરી દીધી છે
             response_text = (
                 f"❤️😊 *{message.from_user.first_name}* 😊❤️\n"
                 f"`{user_text}`\n\n"
