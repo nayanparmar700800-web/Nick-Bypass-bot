@@ -62,7 +62,7 @@ def send_welcome(message):
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode='HTML')
 
-# Message Handler (તમારી નવી અપડેટ ચેનલ સાથેનો ફાઇનલ લેઆઉટ)
+# Message Handler (૧૦૦૦૦૦૨૬૪૭.jpg જેવો બેસ્ટ લેઆઉટ)
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     user_text = message.text
@@ -78,11 +78,16 @@ def handle_message(message):
             end_time = time.time()
             time_taken = round(end_time - start_time)
 
-            # ૧૦૦% પરફેક્ટ રિસ્પોન્સ ફોર્મેટ - કસ્ટમ અપડેટ ચેનલ લિંક સાથે
+            # ૧૦૦% સ્ક્રીનશોટ 1000002647.jpg જેવો જ લાઈનિંગ અને બૉક્સવાળો લેઆઉટ
             response_text = (
                 f"❤️😊 <b>NAYAN</b> 😊❤️\n"
-                f"{user_text}\n"
-                f"<a href='{bypassed_result}'>{bypassed_result}</a>\n\n"
+                f"{user_text}\n\n"
+                f"<blockquote><b>Original Link :</b> ❞\n"
+                f"✅ <a href='{user_text}'>{user_text}</a></blockquote>\n"
+                f"<blockquote><b>Bypassed Link :</b> ❞\n"
+                f"✅ <a href='{bypassed_result}'>{bypassed_result}</a></blockquote>\n"
+                f"<blockquote><b>Time Taken : {time_taken} seconds</b> ❞</blockquote>\n"
+                f"_____________________\n\n"
                 f"<blockquote><b>24-6-2026 : Fixed v2links Bypass</b> ❞</blockquote>\n\n"
                 f"<b>Get Free update chennal :</b> <a href='https://t.me/nickbypassbot007'>Join Channel</a>\n\n"
                 f"<blockquote>Share and Support Bot, We are helping you to save your time and you can help us by sharing to your friends. ❞</blockquote>\n"
@@ -105,5 +110,5 @@ def handle_message(message):
 if __name__ == "__main__":
     t = Thread(target=run)
     t.start()
-    print("Bot is running with updated update channel layout...")
+    print("Bot is running perfectly with 1000002647.jpg layout...")
     bot.infinity_polling()
